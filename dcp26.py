@@ -7,6 +7,8 @@ expensive.
 
 Do this in constant space and in one pass.
 """
+import pytest
+
 
 class Node:
     def __init__(self, value):
@@ -14,6 +16,7 @@ class Node:
         self.next = None
     def __str__(self):
         return str(self.value)
+
 
 class LinkedList:
     def __init__(self, values:list) -> None:
@@ -31,11 +34,6 @@ class LinkedList:
             curr = curr.next
         return out
 
-def main():
-    ll = LinkedList([9,9,1,6,3])
-    print(ll)
-    remove_element(ll, 4)
-    print(ll)
 
 def remove_element(linked_list: LinkedList, k: int) -> None:
     if k == 0:
@@ -49,7 +47,17 @@ def remove_element(linked_list: LinkedList, k: int) -> None:
     gone = curr.next
     curr.next = curr.next.next
     del gone
-    
 
-if __name__ == "__main__":
-    main()
+@pytest.fixture()
+def linked_list():
+    yield LinkedList([9,9,1,6,3])
+
+def test_1(linked_list): 
+    remove_element(linked_list, 0)
+    assert str(linked_list) == "9 -> 1 -> 6 -> 3 -> "
+def test_2(linked_list): 
+    remove_element(linked_list, 2)
+    assert str(linked_list) == "9 -> 9 -> 6 -> 3 -> "
+def test_3(linked_list): 
+    remove_element(linked_list, 4)
+    assert str(linked_list) == "9 -> 9 -> 1 -> 6 -> "
